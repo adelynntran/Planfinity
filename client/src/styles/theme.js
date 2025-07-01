@@ -1,4 +1,5 @@
 // src/styles/theme.js
+//Usage: component-specific styles
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({

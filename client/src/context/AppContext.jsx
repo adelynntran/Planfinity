@@ -1,5 +1,5 @@
 // src/context/AppContext.jsx
-//Usage: "data bucket" file aka context provider
+//Usage: "data bucket" file aka context provider (like a data warehouse)
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import { mockCourses, initialTerms, mockImportantDates, gradePoints } from '../data/mockCourses';
 
