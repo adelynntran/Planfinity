@@ -1,7 +1,7 @@
 // src/context/AppContext.jsx
 //Usage: "data bucket" file aka context provider (like a data warehouse)
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import { mockCourses, initialTerms, mockImportantDates, gradePoints } from '../data/mockCourses';
+import { mockCourses, initialTerms, mockImportantDates, gradePercentRange } from '../data/mockCourses';
 
 // Create the context
 
@@ -179,22 +179,34 @@ export function AppProvider({ children }) {
   };
 
   // Calculate GPA
-  const calculateGPA = () => {
-    const gradedCourses = Object.entries(state.courseGrades);
-    if (gradedCourses.length === 0) return 0;
+  /*
+  1. find the GPA from gradePercentRange array.
+  2. Look for the object where "letter" matches the grade
+  3. use that object's gpa value
+  p/s: use .find() to search through thr array for the matching letter grade
+   */
 
+  //cGPA calculator 
+  const calculateCumulativeGPA = () => {
+    const gradedCourses = Object.entries(state.courseGrades);
+    if (gradedCourses.length === 0) return { gpa: 0, letter: 'N/A' };
+  
     let totalPoints = 0;
     let totalCredits = 0;
-
-    gradedCourses.forEach(([courseId, grade]) => {
-      const course = state.courses.find(c => c.id === courseId);
-      if (course && gradePoints[grade] !== undefined) {
-        totalPoints += gradePoints[grade] * course.credits;
+  
+    gradedCourses.forEach(([courseId, letterGrade]) => {
+      const course = getCourse(courseId);
+      // Find the GPA from your gradePercentRange
+      const gradeInfo = gradePercentRange.find(grade => grade.letter === letterGrade);
+      
+      if (course && gradeInfo) {
+        totalPoints += gradeInfo.gpa * course.credits;
         totalCredits += course.credits;
       }
     });
-
-    return totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
+  
+    const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
+    return { gpa, letter: 'Coming soon' }; // We'll add letter calculation later
   };
 
   // Get course by ID
@@ -224,7 +236,7 @@ export function AppProvider({ children }) {
     addImportantDate,
     removeImportantDate,
     toggleDateCompletion,
-    calculateGPA,
+    calculateCumulativeGPA,
     getCourse,
     getCoursesForTerm,
     getTermCredits

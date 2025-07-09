@@ -109,7 +109,7 @@ export const initialTerms = {
 };
 
 //sample important dates
-export const sampleImportantDates = [
+export const mockImportantDates = [
     {
         id: 1,
         title: 'EECS 2101 Assignment 3',
