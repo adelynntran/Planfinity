@@ -98,8 +98,8 @@ export const gradePercentRange = [
 
 //initial empty plan structure
 export const initialTerms = {
-    'Fall 2425': [],
-    'Winter 2425': [],
+    'Fall 2425': ['EECS2030', 'MATH1090'],
+    'Winter 2425': ['EECS2031'],
     'Fall 2526': [],
     'Winter 2526': [],
     'Fall 2627': [],
