@@ -28,8 +28,8 @@ const initialState = {
   courseGrades: {
     // Example grades
     'EECS2030': 'A',
-    'MATH1090': 'A+',
-    'EECS2031': 'B'
+    'MATH2030': 'A+',
+    'EECS2021': 'B'
   },
   
   // Important dates
@@ -225,6 +225,16 @@ export function AppProvider({ children }) {
     return courses.reduce((total, course) => total + course.credits, 0);
   };
 
+  // Calculate total credits for the whole degree
+  const getDegreeCredits = () => {
+    let totalCredits = 0;
+    Object.keys(state.currentPlan.terms).forEach(termName => {
+      totalCredits += getTermCredits(termName);
+    });
+    return totalCredits;
+
+  }
+
   // Context value
   const value = {
     state,
@@ -239,7 +249,8 @@ export function AppProvider({ children }) {
     calculateCumulativeGPA,
     getCourse,
     getCoursesForTerm,
-    getTermCredits
+    getTermCredits,
+    getDegreeCredits
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
