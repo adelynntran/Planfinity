@@ -3,6 +3,9 @@
 //so this means from component/ -> src/ -> context
 import { useApp } from '../../context/AppContext';
 
+//import components here:
+import IndividualCourse from '../course/IndividualCourse';
+
 function TermCard({ termName }) {
   const { getCoursesForTerm, getTermCredits, state } = useApp();
   
@@ -10,10 +13,10 @@ function TermCard({ termName }) {
   const totalCredits = getTermCredits(termName);
   
   return (
-    <div style={{ 
-      border: '1px solid #e2e8f0', 
+    <div style={{
+      border: '1px solid #e2e8f0',
       borderRadius: '8px',
-      padding: '16px', 
+      padding: '16px',
       margin: '8px',
       backgroundColor: '#ffffff',
       boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
@@ -24,23 +27,34 @@ function TermCard({ termName }) {
       {courses.length === 0 ? (
         <p style={{ color: '#9ca3af', fontStyle: 'italic' }}>No courses planned</p>
       ) : (
+
+        //IndividualCourse component in use:
         courses.map(course => (
-          <div key={course.id} style={{ 
-            margin: '12px 0', 
-            padding: '12px',
-            backgroundColor: '#f9fafb',
-            borderRadius: '6px',
-            border: '1px solid #f3f4f6'
-          }}>
-            <strong style={{ color: '#111827', fontSize: '14px' }}>{course.code}</strong>
-            <span style={{ color: '#374151', marginLeft: '8px' }}>- {course.name}</span>
-            <br />
-            <small style={{ color: '#6b7280', fontSize: '12px' }}>
-              {course.credits} credits | Grade: {state.courseGrades[course.id] || 'Not graded'}
-            </small>
-          </div>
+          <IndividualCourse 
+            key={course.id} 
+            courseId={course.id} 
+            termName={termName} 
+          />
         ))
       )}
+      
+      {/* Add Course Button */}
+      <div style={{ marginTop: '10px', borderTop: '1px solid #e5e7eb', paddingTop: '10px' }}>
+        <button 
+          style={{ 
+            background: '#10b981', 
+            color: 'white', 
+            border: 'none', 
+            padding: '8px 16px', 
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+          onClick={() => console.log(`Add course to ${termName}`)}
+        >
+          Add Course
+        </button>
+      </div>
     </div>
   );
 }
