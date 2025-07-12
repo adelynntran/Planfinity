@@ -1,6 +1,11 @@
 import { useApp } from '../../context/AppContext';
+import {useState} from 'react';
+
+//import components here:
+import WarningBox from '../../components/common/WarningBox';
 
 function IndividualCourse({ courseId, termName }) {
+  const [showWarning, setShowWarning] = useState(false);
   const { getCourse, removeCourseFromTerm, state } = useApp();
   const course = getCourse(courseId);
   
@@ -50,14 +55,35 @@ function IndividualCourse({ courseId, termName }) {
           }}
           onClick={(e) => {
             e.stopPropagation(); // Prevent course click when deleting
-            console.log(`${course.id} is removed from ${termName}`)
-            removeCourseFromTerm(course.id, termName);
+            console.log(`Showing warning for ${course.id} in ${termName}`);
+            setShowWarning(true);
           }}
           title="Remove course"
         >
             <strong>-</strong>
         </button>
       </div>
+
+      {/*WarningBox component*/}
+      <WarningBox
+      title="Remove Course"
+      message={`Are you sure you want to remove ${course.code} from ${termName}?`}
+      open={showWarning}
+
+      //confirm to delete the course:
+      onConfirm={() => {
+        //actually delete the course (confirm to delete)
+        removeCourseFromTerm(course.id,termName);
+        setShowWarning(false); //close WarningBox dialog
+      }}
+
+      //do not want to delete the course:
+      onCancel={() => {
+        setShowWarning(false); //just close WarningBox dialog, no further action
+      }}
+      >
+
+      </WarningBox>
     </div>
   );
 }
