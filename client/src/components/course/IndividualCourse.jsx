@@ -1,17 +1,20 @@
 import { useApp } from '../../context/AppContext';
 import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 //import components here:
 import WarningBox from '../../components/common/WarningBox';
 
 function IndividualCourse({ courseId, termName }) {
+  const navigate = useNavigate();
   const [showWarning, setShowWarning] = useState(false);
   const { getCourse, removeCourseFromTerm, state } = useApp();
   const course = getCourse(courseId);
   
   const handleCourseClick = () => {
     // Navigate to course page (notes: add React Router later)
-    console.log(`Navigate to ${course.code} page`);
+    navigate(`/course/${course.id}`);
+    console.log(`Navigating to ${course.id} page`);
   };
   
   return (
@@ -24,12 +27,26 @@ function IndividualCourse({ courseId, termName }) {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      cursor: 'pointer'
     }}
-    onClick={handleCourseClick}  // Click to navigate
     >
       <div style={{ flex: 1 }}>
-        <strong style={{ color: '#111827', fontSize: '14px' }}>{course.code}</strong>
+
+      {/*CourseCode button to nav to IndividualCoursePage.jsx */}
+      <button 
+        onClick={handleCourseClick}
+        style={{ 
+          background: 'none',
+          border: 'none', 
+          color: '#1976d2',           
+          fontWeight: 'bold',
+          fontSize: '14px',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          padding: 0
+        }}
+      >
+        {course.code}
+      </button>
         <div style={{ color: '#374151', fontSize: '13px', marginTop: '2px' }}>{course.name}</div>
         <small style={{ color: '#6b7280', fontSize: '11px' }}>
           {course.credits} credits • Grade: {state.courseGrades[course.id] || 'Not graded'}
