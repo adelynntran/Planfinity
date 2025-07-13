@@ -5,6 +5,7 @@ import {AppProvider} from './context/AppContext';
 
 //import pages here:
 import HomePage from './pages/HomePage';
+import Layout from './components/layout/Layout';
 import IndividualCoursePage from './pages/IndividualCoursePage';
 
 function App() {
@@ -15,15 +16,18 @@ function App() {
 
   {/*Add <Router> to use useNavigate() */}
   <Router>
-  <div className="App">
+    <Layout>
+      <div className="App">
 
-    {/* add routes to pages here*/}
-    <Routes>
-      <Route path="/" element={<HomePage/>} />
-      <Route path="/course/:courseId/" element={<IndividualCoursePage />} />
-    </Routes>
+        {/* add routes to pages here*/}
+        <Routes>
+          <Route path="/" element={<HomePage/>} />
+          <Route path="/course/:courseId/" element={<IndividualCoursePage />} />
+        </Routes>
+
+      </div>
+    </Layout>
   
-  </div>
   </Router>
 </AppProvider>
   );
