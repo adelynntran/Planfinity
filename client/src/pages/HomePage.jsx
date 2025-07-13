@@ -17,8 +17,6 @@ function HomePage() {
     
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-          <h1 style={{ color: '#2563eb', marginBottom: '10px' }}>Welcome to Planfinity</h1>
-          <h2 style={{ color: '#64748b', fontSize: '18px' }}>How are you doing today chef?</h2>
           
           <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
             <p><strong style={{ color: '#111827', fontSize: '14px' }}>Total Courses:</strong> <strong style={{ color: '#111827', fontSize: '14px' }}></strong><strong style={{ color: '#111827', fontSize: '14px' }}>{state.courses.length}</strong></p>
