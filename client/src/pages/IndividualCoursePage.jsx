@@ -24,7 +24,6 @@ function IndividualCoursePage() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>{course.code} - {course.name}</h1>
       <p><strong>Credits:</strong> {course.credits}</p>
       <p><strong>Category:</strong> {course.category}</p>
       <p><strong>Description:</strong> {course.description}</p>
