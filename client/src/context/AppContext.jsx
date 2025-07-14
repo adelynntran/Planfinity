@@ -208,7 +208,11 @@ export function AppProvider({ children }) {
     const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
     return { gpa, letter: 'Coming soon' }; // We'll add letter calculation later
   };
-
+  
+  //individual course GPA calculator:
+  const calculateCourseGPA = (courseId) => {
+      return(85);
+  };
   // Get course by ID
   const getCourse = (courseId) => {
     return state.courses.find(course => course.id === courseId);
@@ -247,6 +251,7 @@ export function AppProvider({ children }) {
     removeImportantDate,
     toggleDateCompletion,
     calculateCumulativeGPA,
+    calculateCourseGPA,
     getCourse,
     getCoursesForTerm,
     getTermCredits,
