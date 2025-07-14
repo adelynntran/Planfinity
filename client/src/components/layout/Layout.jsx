@@ -3,10 +3,13 @@ import { useApp } from '../../context/AppContext';
 
 //import components here:
 import Header from '../layout/Header';
+import Footer from '../layout/Footer';
 
 function Layout({children}) {
     const location = useLocation();
-    const { getCourse } = useApp();
+
+    //import states from context value in AppContext:
+    const { getCourse, calculateCumulativeGPA, state } = useApp();
     
 
     //determine header content based on current route:
@@ -36,7 +39,37 @@ function Layout({children}) {
         };
     };
 
+    const getFooterProps = () => {
+        if (location.pathname === '/') {
+            const gpaData = calculateCumulativeGPA();
+            return {
+                type: "degree",
+                data: {
+                    degreeName: state.currentPlan.name,
+                    cgpaScale9: gpaData.gpa,
+                    letterGrade: gpaData.letter
+                }
+            };
+        }
+        if (location.pathname.startsWith('/course/')) {
+            const courseId = location.pathname.split('/')[2];
+            const course = getCourse(courseId);
+            return {
+                type: "course",
+                data: {
+                    courseName: course?.code,
+                    currentCourseGPA: 85, //dummy data
+                    targetCourseGPA: 90 //dummy data
+                }
+            };
+        }
+
+        //default return
+        return {type: "dgree", data: {}};
+    }
+
     const headerProps = getHeaderProps();
+    const footerProps = getFooterProps();
     return (
         <div>
             {/*Header component*/}
@@ -46,8 +79,12 @@ function Layout({children}) {
             <main style={{ paddingTop: '80px' }}>
       {children}
     </main>
+            {/*Footer component*/}
+            <Footer {...footerProps}/>
         </div>
     );
+
+    
 };
 
 export default Layout;
