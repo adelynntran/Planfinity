@@ -1,5 +1,3 @@
-
-
 function Header({title, description}) {
 
     //handle "login" button click:
