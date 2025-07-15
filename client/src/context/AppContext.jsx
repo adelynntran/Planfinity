@@ -31,6 +31,17 @@ const initialState = {
     'MATH2030': 'A+',
     'EECS2021': 'B'
   },
+
+  // Individual course assignments
+  courseAssignments: {
+    'EECS2030' : [
+      {id: 1, name: 'Assignments', weight: 0.1, grade: 100, completed: true},
+      {id: 2, name: 'Written 1', weight: 0.1, grade: 92, completed: true},
+      {id: 3, name: 'Written 2', weight: 0.1, grade: 46, completed: true},
+      {id: 4, name: 'Prog Test', weight: 0.15, grade: null, completed: false},
+      {id: 5, name: 'Final', weight: 0.55, grade: null, completed: false}
+    ]
+  },
   
   // Important dates
   importantDates: mockImportantDates,
@@ -196,7 +207,7 @@ export function AppProvider({ children }) {
   
     gradedCourses.forEach(([courseId, letterGrade]) => {
       const course = getCourse(courseId);
-      // Find the GPA from your gradePercentRange
+      // Find the GPA from gradePercentRange
       const gradeInfo = gradePercentRange.find(grade => grade.letter === letterGrade);
       
       if (course && gradeInfo) {
@@ -206,13 +217,36 @@ export function AppProvider({ children }) {
     });
   
     const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
-    return { gpa, letter: 'Coming soon' }; // We'll add letter calculation later
+    return { gpa, letter: 'Coming soon' }; //add letter calculation later
   };
   
   //individual course GPA calculator:
   const calculateCourseGPA = (courseId) => {
-      return(85);
+      const assignments = state.courseAssignments[courseId] || [];
+      const completed = assignments.filter(a => a.completed);
+      return completed.reduce((sum,a) => sum + a.grade, 0) / completed.length;
   };
+
+  //required grade for target gpa (e.g. assignment 1 need 66/100 to get 70 course gpa)
+  const calculateRequiredGrade = (courseId, targetGPA) => {
+    const assignments = state.courseAssignments[courseId] || [];
+    const completed = assignments.filter(a => a.completed);
+    const incomplete = assignments.filter(a => !a.completed);
+
+    //equation to find the required grade (x) of incompleted assignments:
+    //completed_sum + x * incomplete_weight_sum = target
+    const completedSum = completed.reduce((sum,a) => sum + (a.grade * a.weight),0);
+    const incompleteWeightSum = incomplete.reduce((sum,a) => sum + a.weight,0);
+
+    return (targetGPA - completedSum) / incompleteWeightSum;
+  }
+
+  //helper: convert from scale 100 to letter grade:
+  const convertToLetterGrade = (percentage) => {
+    return gradePercentRange.find(grade =>
+      percentage >= grade.min && percentage <= grade.max
+    );
+  }
   // Get course by ID
   const getCourse = (courseId) => {
     return state.courses.find(course => course.id === courseId);
@@ -252,6 +286,8 @@ export function AppProvider({ children }) {
     toggleDateCompletion,
     calculateCumulativeGPA,
     calculateCourseGPA,
+    calculateRequiredGrade,
+    convertToLetterGrade,
     getCourse,
     getCoursesForTerm,
     getTermCredits,
