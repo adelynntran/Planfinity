@@ -86,6 +86,41 @@ function appReducer(state, action) {
           [action.courseId]: action.grade
         }
       };
+      
+      //update the exisiting assignment:
+      case 'UPDATE_ASSIGNMENT':
+        return {
+          ...state,
+          courseAssignments: {
+            ...state.courseAssignments,
+            [action.courseId]: state.courseAssignments[action.courseId].map(assignment =>
+              assignment.id === action.assignmentId
+              ? {...assignment, ...action.updates}
+              : assignment
+            )
+          }
+        };
+
+        //add new, non-existing assignment:
+        case 'ADD_ASSIGNMENT':
+          return {
+            //copy all existing state
+            ...state,
+            courseAssignments: {
+            
+              ...state.courseAssignments, //keep all other courses assignments
+              //update specific course' assignments
+              [action.courseId]: [ //based on courseId, eg for 'EECS2030' specifically
+                ...(state.courseAssignments[action.courseId] || []), //keep existing assignments
+                // || []: safety check, if the course doesnt have any assignments yet, use an
+                //empty array instead of undefined
+                {
+                  id: Date.now(), //make a unique ID for it
+                  ...action.assignmentData //add the new assignment data
+                }
+              ]
+            }
+          };
 
     case 'ADD_IMPORTANT_DATE':
       return {
@@ -175,6 +210,21 @@ export function AppProvider({ children }) {
 
   const updateCourseGrade = (courseId, grade) => {
     dispatch({ type: 'UPDATE_COURSE_GRADE', courseId, grade });
+  };
+
+  //update assignment grade or weight:
+  const updateAssignment = (courseId, assignmentId, updates) => {
+    dispatch({type: 'UPDATE_ASSIGNMENT', courseId, assignmentId, updates});
+  };
+
+  //add new assignment:
+  const addAssignment = (courseId, assignmentData) => {
+    dispatch({type: 'ADD_ASSIGNMENT', courseId, assignmentData});
+  };
+
+  //get assignments for a specific course:
+  const getCourseAssignments = (courseId) => {
+    return state.courseAssignments[courseId] || [];
   };
 
   const addImportantDate = (dateData) => {
@@ -288,6 +338,9 @@ export function AppProvider({ children }) {
     calculateCourseGPA,
     calculateRequiredGrade,
     convertToLetterGrade,
+    updateAssignment,
+    addAssignment,
+    getCourseAssignments,
     getCourse,
     getCoursesForTerm,
     getTermCredits,
