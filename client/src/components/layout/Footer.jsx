@@ -6,7 +6,7 @@ function Footer({type, data}) {
     console.log('Footer data: ', data);
 //styling
 const footerStyle = {
-    position: 'fixed',
+    position: 'sticky',
     bottom: 0,
     left: 0,
     right: 0,
