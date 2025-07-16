@@ -6,6 +6,9 @@ import {useNavigate} from 'react-router-dom';
 //import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
+//import components here:
+import AssignmentTracker from '../components/individual-course-page/AssignmentTracker';
+
 function IndividualCoursePage() {
     const navigate = useNavigate();
   const { courseId } = useParams(); // Get courseId from URL
@@ -29,12 +32,7 @@ function IndividualCoursePage() {
       <p><strong>Description:</strong> {course.description}</p>
       <p><strong>Prerequisites:</strong> {course.prerequisites.join(', ') || 'None'}</p>
       
-      <h2>Coming Soon:</h2>
-      <ul>
-        <li>Assignment Tracker</li>
-        <li>Grade Calculator</li>
-        <li>Course Notes</li>
-      </ul>
+      <AssignmentTracker />
 
     {/*Back to HomePage Button */}
     <Button 
