@@ -10,6 +10,7 @@ const footerStyle = {
     bottom: 0,
     left: 0,
     right: 0,
+    width: '100%',
     backgroundColor: '#ffffff',      // ← Add background color
     borderTop: '1px solid #e5e7eb',  // ← Add border
     padding: '16px 24px',            // ← Add padding  
@@ -21,6 +22,7 @@ const footerStyle = {
     color: '#374151',           // Dark gray text
     fontSize: '14px',           // Readable size
     fontWeight: '500',          // Slightly bold
+    boxSizing: 'border-box'
   };
 
     if (type === "degree") {

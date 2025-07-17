@@ -70,21 +70,100 @@ function Layout({children}) {
 
     const headerProps = getHeaderProps();
     const footerProps = getFooterProps();
+    
     return (
-        <div>
+        <div style={{
+            width: '100vw',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            margin: 0,
+            padding: 0,
+            boxSizing: 'border-box'
+        }}>
             {/*Header component*/}
             <Header
-            title={headerProps.title}
-            description={headerProps.description} />
-            <main style={{ paddingTop: '80px' }}>
-      {children}
-    </main>
+                title={headerProps.title}
+                description={headerProps.description} />
+            
+            {/* Main content area with sidebar */}
+            <div style={{
+                display: 'flex',
+                flex: 1,
+                paddingTop: '80px',
+                width: '100%'
+            }}>
+                {/* Main content - bigger width */}
+                <main style={{
+                    flex: '3',
+                    width: '75%',
+                    margin: 0,
+                    padding: 0,
+                    boxSizing: 'border-box',
+                    overflow: 'auto'
+                }}>
+                    {children}
+                </main>
+                
+                {/* Sidebar - smaller width */}
+                <aside style={{
+                    flex: '1',
+                    width: '25%',
+                    backgroundColor: '#f8f9fa',
+                    border: '2px solid #28a745',
+                    padding: '15px',
+                    boxSizing: 'border-box',
+                    overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                }}>
+                    {/* Same sidebar content as before */}
+                    <h3 style={{ 
+                        marginTop: 0, 
+                        color: '#333', 
+                        fontSize: '18px',
+                        textAlign: 'center',
+                        marginBottom: '15px'
+                    }}>Important Dates</h3>
+                    
+                    <div style={{ 
+                        backgroundColor: '#e8f5e8', 
+                        padding: '10px',
+                        borderRadius: '6px',
+                        marginBottom: '15px',
+                        width: '80%',
+                        textAlign: 'center'
+                    }}>
+                        <p style={{ margin: 0, fontSize: '12px' }}>📅 Calendar</p>
+                    </div>
+                    
+                    <div style={{ 
+                        fontSize: '12px',
+                        color: '#666',
+                        width: '90%',
+                        textAlign: 'left'
+                    }}>
+                        <p style={{ margin: '5px 0' }}>□ Jan 15: EECS 2030</p>
+                        <p style={{ margin: '5px 0' }}>□ Jan 25: MATH 1300</p>
+                        <div style={{ 
+                            marginTop: '15px', 
+                            fontSize: '11px',
+                            textAlign: 'center',
+                            padding: '8px',
+                            backgroundColor: '#f0f0f0',
+                            borderRadius: '4px'
+                        }}>
+                            
+                        </div>
+                    </div>
+                </aside>
+            </div>
+            
             {/*Footer component*/}
             <Footer {...footerProps}/>
         </div>
     );
-
-    
 };
 
 export default Layout;
