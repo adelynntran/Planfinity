@@ -16,7 +16,7 @@ function HomePage() {
     const totalCredits = getDegreeCredits();
     
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ padding: '20px'}}>
           
           <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
             <p><strong style={{ color: '#111827', fontSize: '14px' }}>Total Courses:</strong> <strong style={{ color: '#111827', fontSize: '14px' }}></strong><strong style={{ color: '#111827', fontSize: '14px' }}>{state.courses.length}</strong></p>
