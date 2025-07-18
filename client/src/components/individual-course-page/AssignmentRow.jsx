@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import WarningBox from '../common/WarningBox';
 
 function AssignmentRow({ assignment, courseId, requiredGrade }) {
   
   //declare necessary functions, hooks here:
-  const { updateAssignment } = useApp(); 
-  // TODO: Add removeAssignment when you create it in AppContext
-  // const { updateAssignment, removeAssignment } = useApp();
+  const { updateAssignment, removeAssignment } = useApp();
   const [showWarning, setShowWarning] = useState(false);
   //boolean state to track if this row is in "edit mode" or "display mode":
   //true: show "input" fields, false: show regular text
@@ -234,63 +233,29 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
         </div>
       </div>
 
-      {/* Warning Modal/Dialog */}
-      {showWarning && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-            maxWidth: '400px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ margin: '0 0 15px 0', color: '#dc3545' }}>Delete Assignment</h3>
-            <p style={{ margin: '0 0 20px 0' }}>
-              Are you sure you want to delete "{assignment.name}"? This action cannot be undone.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-              <button
-                onClick={() => setShowWarning(false)}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/*WarningBox component*/}
+            <WarningBox
+            title="Remove Assignment"
+            message={`Are you sure you want to remove ${assignment.name} from ${courseId}?`}
+            open={showWarning}
+      
+            //confirm to delete the course:
+            onConfirm={() => {
+              //actually delete the course (confirm to delete)
+              removeAssignment(courseId, assignment.id);
+              setShowWarning(false); //close WarningBox dialog
+            }}
+      
+            //do not want to delete the course:
+            onCancel={() => {
+              setShowWarning(false); //just close WarningBox dialog, no further action
+            }}
+            >
+      
+            </WarningBox>
+         
+        
+      
     </>
   );
 }
