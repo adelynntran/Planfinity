@@ -122,6 +122,15 @@ function appReducer(state, action) {
             }
           };
 
+          case 'REMOVE_ASSIGNMENT':
+            return {
+              ...state,
+              courseAssignments: {
+                ...state.courseAssignments,
+                [action.courseId]: state.courseAssignments[action.courseId].filter(assignment => assignment.id != action.assignmentId)
+              }
+            };
+
     case 'ADD_IMPORTANT_DATE':
       return {
         ...state,
@@ -221,6 +230,11 @@ export function AppProvider({ children }) {
   const addAssignment = (courseId, assignmentData) => {
     dispatch({type: 'ADD_ASSIGNMENT', courseId, assignmentData});
   };
+
+  //remove current assignment:
+  const removeAssignment = (courseId, assignmentId) => {
+    dispatch({type: 'REMOVE_ASSIGNMENT', courseId, assignmentId});
+  }
 
   //get assignments for a specific course:
   const getCourseAssignments = (courseId) => {
@@ -340,6 +354,7 @@ export function AppProvider({ children }) {
     convertToLetterGrade,
     updateAssignment,
     addAssignment,
+    removeAssignment,
     getCourseAssignments,
     getCourse,
     getCoursesForTerm,
