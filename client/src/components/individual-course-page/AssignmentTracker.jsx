@@ -66,7 +66,7 @@ function AssignmentTracker() {
       <div style={{ marginBottom: '20px' }}>
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: '2fr 1fr 1fr', 
+          gridTemplateColumns: '2fr 1fr 1fr 60px',
           gap: '10px',
           fontWeight: 'bold',
           padding: '10px',
@@ -78,6 +78,7 @@ function AssignmentTracker() {
           <div>Assignment Name</div>
           <div>Weight</div>
           <div>Grade</div>
+          <div></div> {/*empty header for the rm assignment button*/}
         </div>
 
         {assignments.map(assignment => (
@@ -199,6 +200,8 @@ function AssignmentTracker() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <label style={{ fontWeight: 'bold' }}>Target Grade:</label>
           <input
+            max='100'
+            min='0'
             type="number"
             value={targetGrade}
             onChange={(e) => setTargetGrade(parseFloat(e.target.value) || 0)}
@@ -209,7 +212,8 @@ function AssignmentTracker() {
               width: '80px',
               textAlign: 'center',
               fontSize: '16px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              
             }}
           />
         </div>

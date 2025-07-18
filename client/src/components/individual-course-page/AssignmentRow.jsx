@@ -3,8 +3,11 @@ import { useApp } from '../../context/AppContext';
 
 function AssignmentRow({ assignment, courseId, requiredGrade }) {
   
-    //declare necessary functions, hooks here:
-  const { updateAssignment } = useApp();
+  //declare necessary functions, hooks here:
+  const { updateAssignment } = useApp(); 
+  // TODO: Add removeAssignment when you create it in AppContext
+  // const { updateAssignment, removeAssignment } = useApp();
+  const [showWarning, setShowWarning] = useState(false);
   //boolean state to track if this row is in "edit mode" or "display mode":
   //true: show "input" fields, false: show regular text
   const [isEditing, setIsEditing] = useState(false);
@@ -47,6 +50,14 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    console.log(`Deleting assignment ${assignment.id} from course ${courseId}`);
+    setShowWarning(false);
+    
+    // TODO: Uncomment when you add removeAssignment to AppContext
+    // removeAssignment(courseId, assignment.id);
+  };
+
   const displayGrade = () => {
     if (assignment.completed && assignment.grade !== null) {
       return `${assignment.grade}/100`;
@@ -70,7 +81,7 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
     return (
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: '2fr 1fr 1fr', 
+        gridTemplateColumns: '2fr 1fr 1fr 60px', // Added 4th column for delete button
         gap: '10px',
         padding: '10px',
         backgroundColor: '#fff3cd',
@@ -101,24 +112,23 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
           }}
           placeholder="Weight %"
         />
-        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-          <input
-            type="number"
-            value={editValues.grade}
-            onChange={(e) => setEditValues({...editValues, grade: e.target.value})}
-            style={{ 
-              padding: '6px', 
-              borderRadius: '4px', 
-              border: '1px solid #ccc',
-              fontSize: '14px',
-              flex: 1
-            }}
-            placeholder="Grade"
-          />
+        <input
+          type="number"
+          value={editValues.grade}
+          onChange={(e) => setEditValues({...editValues, grade: e.target.value})}
+          style={{ 
+            padding: '6px', 
+            borderRadius: '4px', 
+            border: '1px solid #ccc',
+            fontSize: '14px'
+          }}
+          placeholder="Grade"
+        />
+        <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
           <button
             onClick={handleSave}
             style={{
-              padding: '4px 8px',
+              padding: '4px 6px',
               backgroundColor: '#28a745',
               color: 'white',
               border: 'none',
@@ -132,7 +142,7 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
           <button
             onClick={handleCancel}
             style={{
-              padding: '4px 8px',
+              padding: '4px 6px',
               backgroundColor: '#dc3545',
               color: 'white',
               border: 'none',
@@ -149,52 +159,139 @@ function AssignmentRow({ assignment, courseId, requiredGrade }) {
   }
 
   return (
-    <div 
-      style={{ 
-        display: 'grid', 
-        gridTemplateColumns: '2fr 1fr 1fr', 
-        gap: '10px',
-        padding: '10px',
-        backgroundColor: assignment.completed ? '#f8f9fa' : '#fff',
-        borderRadius: '4px',
-        border: '1px solid #dee2e6',
-        marginBottom: '5px',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease'
-      }}
-      onClick={() => setIsEditing(true)}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = '#e9ecef';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = assignment.completed ? '#f8f9fa' : '#fff';
-      }}
-    >
-      <div style={{ 
-        fontSize: '14px',
-        fontWeight: assignment.completed ? 'normal' : 'bold',
-        color: 'black'
-      }}>
-        {assignment.name}
+    <>
+      <div 
+        style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '2fr 1fr 1fr 60px', // Added 4th column for delete button
+          gap: '10px',
+          padding: '10px',
+          backgroundColor: assignment.completed ? '#f8f9fa' : '#fff',
+          borderRadius: '4px',
+          border: '1px solid #dee2e6',
+          marginBottom: '5px',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease'
+        }}
+        onClick={() => setIsEditing(true)}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#e9ecef';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = assignment.completed ? '#f8f9fa' : '#fff';
+        }}
+      >
+        <div style={{ 
+          fontSize: '14px',
+          fontWeight: assignment.completed ? 'normal' : 'bold',
+          color: 'black'
+        }}>
+          {assignment.name}
+        </div>
+        
+        <div style={{ 
+          fontSize: '14px',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          color: '#495057'
+        }}>
+          {(assignment.weight * 100).toFixed(0)}%
+        </div>
+        
+        <div style={{ 
+          fontSize: '14px',
+          textAlign: 'center',
+          ...getGradeStyle()
+        }}>
+          {displayGrade()}
+        </div>
+
+        {/* remove assignment button */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <button 
+            style={{ 
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              border: 'none',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent assignment click when deleting
+              console.log(`Showing warning`);
+              setShowWarning(true);
+            }}
+            title="Remove assignment"
+          >
+            <strong>×</strong>
+          </button>
+        </div>
       </div>
-      
-      <div style={{ 
-        fontSize: '14px',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#495057'
-      }}>
-        {(assignment.weight * 100).toFixed(0)}%
-      </div>
-      
-      <div style={{ 
-        fontSize: '14px',
-        textAlign: 'center',
-        ...getGradeStyle()
-      }}>
-        {displayGrade()}
-      </div>
-    </div>
+
+      {/* Warning Modal/Dialog */}
+      {showWarning && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            maxWidth: '400px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ margin: '0 0 15px 0', color: '#dc3545' }}>Delete Assignment</h3>
+            <p style={{ margin: '0 0 20px 0' }}>
+              Are you sure you want to delete "{assignment.name}"? This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowWarning(false)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
