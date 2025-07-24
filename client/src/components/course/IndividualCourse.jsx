@@ -18,35 +18,38 @@ function IndividualCourse({ courseId, termName }) {
   };
   
   return (
-    <div style={{ 
-      margin: '12px 0', 
-      padding: '12px',
-      backgroundColor: '#f9fafb',
-      borderRadius: '6px',
-      border: '1px solid #f3f4f6',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-    }}
+    <div 
+      id={`course-${course.id}`} // ← Added ID for scrolling
+      style={{
+        margin: '12px 0',
+        padding: '12px',
+        backgroundColor: window.highlightedCourse === course.id ? '#fff3cd' : '#f9fafb', // ← Highlighting background
+        borderRadius: '6px',
+        border: window.highlightedCourse === course.id ? '2px solid #ffc107' : '1px solid #f3f4f6', // ← Highlighting border
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        transition: 'all 0.3s ease', // ← Smooth transition
+        boxShadow: window.highlightedCourse === course.id ? '0 0 20px rgba(255, 193, 7, 0.3)' : 'none' // ← Glow effect
+      }}
     >
       <div style={{ flex: 1 }}>
-
-      {/*CourseCode button to nav to IndividualCoursePage.jsx */}
-      <button 
-        onClick={handleCourseClick}
-        style={{ 
-          background: 'none',
-          border: 'none', 
-          color: '#1976d2',           
-          fontWeight: 'bold',
-          fontSize: '14px',
-          cursor: 'pointer',
-          textDecoration: 'underline',
-          padding: 0
-        }}
-      >
-        {course.code}
-      </button>
+        {/*CourseCode button to nav to IndividualCoursePage.jsx */}
+        <button
+          onClick={handleCourseClick}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#1976d2',
+            fontWeight: 'bold',
+            fontSize: '14px',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            padding: 0
+          }}
+        >
+          {course.code}
+        </button>
         <div style={{ color: '#374151', fontSize: '13px', marginTop: '2px' }}>{course.name}</div>
         <small style={{ color: '#6b7280', fontSize: '11px' }}>
           {course.credits} credits • Grade: {state.courseGrades[course.id] || 'Not graded'}
@@ -55,20 +58,19 @@ function IndividualCourse({ courseId, termName }) {
       
       {/* remove term button */}
       <div style={{ position: 'relative' }}>
-        <button 
-          style={{ 
+        <button
+          style={{
             borderRadius: '50%',
-  width: '24px',
-  height: '24px',
-  border: 'none',
-  backgroundColor: '#ef4444',
-  color: 'white',
-  cursor: 'pointer',
-  fontSize: '12px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-
+            width: '24px',
+            height: '24px',
+            border: 'none',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            cursor: 'pointer',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
           onClick={(e) => {
             e.stopPropagation(); // Prevent course click when deleting
@@ -77,29 +79,28 @@ function IndividualCourse({ courseId, termName }) {
           }}
           title="Remove course"
         >
-            <strong>-</strong>
+          <strong>-</strong>
         </button>
       </div>
 
       {/*WarningBox component*/}
       <WarningBox
-      title="Remove Course"
-      message={`Are you sure you want to remove ${course.code} from ${termName}?`}
-      open={showWarning}
+        title="Remove Course"
+        message={`Are you sure you want to remove ${course.code} from ${termName}?`}
+        open={showWarning}
 
-      //confirm to delete the course:
-      onConfirm={() => {
-        //actually delete the course (confirm to delete)
-        removeCourseFromTerm(course.id,termName);
-        setShowWarning(false); //close WarningBox dialog
-      }}
+        //confirm to delete the course:
+        onConfirm={() => {
+          //actually delete the course (confirm to delete)
+          removeCourseFromTerm(course.id,termName);
+          setShowWarning(false); //close WarningBox dialog
+        }}
 
-      //do not want to delete the course:
-      onCancel={() => {
-        setShowWarning(false); //just close WarningBox dialog, no further action
-      }}
+        //do not want to delete the course:
+        onCancel={() => {
+          setShowWarning(false); //just close WarningBox dialog, no further action
+        }}
       >
-
       </WarningBox>
     </div>
   );
