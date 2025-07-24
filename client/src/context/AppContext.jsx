@@ -143,6 +143,33 @@ function appReducer(state, action) {
         ]
       };
 
+    case 'REMOVE_TERM_FROM_DEGREE':
+      const { [action.termName]: removedTerm, ...remainingTerms } = state.currentPlan.terms;
+      return {
+        ...state,
+        currentPlan: {
+          ...state.currentPlan,
+          terms: remainingTerms
+        }
+      };
+
+    case 'ADD_TERM_TO_DEGREE':
+      return {
+        ...state,
+        currentPlan: {
+          ...state.currentPlan,
+          terms: {
+            ...state.currentPlan.terms,
+            [action.termName]: []
+          }
+        }
+      };
+
+    case 'ADD_TERM_TO_PLAN':
+      // Placeholder for now
+      console.log('Adding term to new plan:', action.termName, action.termData);
+      return state;
+
     case 'REMOVE_IMPORTANT_DATE':
       return {
         ...state,
@@ -158,6 +185,12 @@ function appReducer(state, action) {
             : date
         )
       };
+
+    case 'ADD_COURSE_TO_CATALOG':
+      return {
+          ...state,
+          courses: [...state.courses, action.courseData]
+        };
 
     case 'SET_LOADING':
       return {
@@ -217,6 +250,11 @@ export function AppProvider({ children }) {
     dispatch({ type: 'REMOVE_COURSE_FROM_TERM', courseId, term });
   };
 
+  //add new course to catalog:
+  const addCourseToCatalog = (courseData) => {
+    dispatch({ type: 'ADD_COURSE_TO_CATALOG', courseData });
+  };
+
   const updateCourseGrade = (courseId, grade) => {
     dispatch({ type: 'UPDATE_COURSE_GRADE', courseId, grade });
   };
@@ -252,6 +290,19 @@ export function AppProvider({ children }) {
   const toggleDateCompletion = (dateId) => {
     dispatch({ type: 'TOGGLE_DATE_COMPLETION', dateId });
   };
+
+  const removeTermFromDegree = (termName) => {
+    dispatch({ type: 'REMOVE_TERM_FROM_DEGREE', termName });
+  };
+  
+  const addTermToDegree = (termName) => {
+    dispatch({ type: 'ADD_TERM_TO_DEGREE', termName });
+  };
+  
+  const addTermToPlan = (termName, termData) => {
+    dispatch({ type: 'ADD_TERM_TO_PLAN', termName, termData });
+  };
+  
 
   // Calculate GPA
   /*
@@ -337,6 +388,7 @@ export function AppProvider({ children }) {
 
   }
 
+
   // Context value
   const value = {
     state,
@@ -358,6 +410,10 @@ export function AppProvider({ children }) {
     getCourseAssignments,
     getCourse,
     getCoursesForTerm,
+    addCourseToCatalog,
+    removeTermFromDegree,
+    addTermToDegree,
+    addTermToPlan,
     getTermCredits,
     getDegreeCredits
   };
