@@ -138,8 +138,7 @@ function appReducer(state, action) {
           ...state.importantDates,
           {
             ...action.dateData,
-            id: Date.now() // Simple ID generation
-          }
+            id: Date.now()} //creating unique id (date+exact time its created)
         ]
       };
 
