@@ -177,14 +177,21 @@ function appReducer(state, action) {
       };
 
     case 'TOGGLE_DATE_COMPLETION':
-      return {
-        ...state,
-        importantDates: state.importantDates.map(date =>
-          date.id === action.dateId
-            ? { ...date, completed: !date.completed }
-            : date
-        )
-      };
+        return {
+          ...state,
+          importantDates: state.importantDates
+            .map(date => 
+              date.id === action.dateId
+                ? { ...date, completed: !date.completed }
+                : date
+            )
+            .sort((a, b) => {
+              // Completed items go to end, then sort by date
+              if (a.completed && !b.completed) return 1;
+              if (!a.completed && b.completed) return -1;
+              return new Date(a.date) - new Date(b.date);
+            }) 
+        };
 
     case 'ADD_COURSE_TO_CATALOG':
       return {
