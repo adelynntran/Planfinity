@@ -12,10 +12,13 @@ function Layout({children}) {
     //import states from context value in AppContext:
     const { getCourse, calculateCumulativeGPA, state } = useApp();
     
+    // Check if we're on an auth page (signin/signup)
+    const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup' || 
+                      (location.pathname === '/' && location.pathname !== '/home');
 
     //determine header content based on current route:
     const getHeaderProps = () => {
-        if (location.pathname === '/') {
+        if (location.pathname === '/home' || location.pathname === '/') {
             return {
                 title: "Welcome Chef!",
                 description: "Plan A in the making..."
@@ -41,7 +44,7 @@ function Layout({children}) {
     };
 
     const getFooterProps = () => {
-        if (location.pathname === '/') {
+        if (location.pathname === '/home' || location.pathname === '/') {
             const gpaData = calculateCumulativeGPA();
             return {
                 type: "degree",
@@ -72,6 +75,22 @@ function Layout({children}) {
     const headerProps = getHeaderProps();
     const footerProps = getFooterProps();
     
+    // If it's an auth page, render only the children (no header, sidebar, footer)
+    if (isAuthPage) {
+        return (
+            <div style={{
+                width: '100vw',
+                minHeight: '100vh',
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box'
+            }}>
+                {children}
+            </div>
+        );
+    }
+    
+    // Normal layout for non-auth pages
     return (
         <div style={{
             width: '100vw',

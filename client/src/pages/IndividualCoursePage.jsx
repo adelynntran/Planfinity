@@ -2,10 +2,13 @@ import { useParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import * as React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 //import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+
+//import api/supabase files here:
+import {addNote, getNoteByCourse} from '../api/notes';
 
 //import components here:
 import AssignmentTracker from '../components/individual-course-page/AssignmentTracker';
@@ -20,9 +23,26 @@ function IndividualCoursePage() {
   const [notes, setNotes] = useState('');
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
+  //call useEffect() and CRUD functions here:
+  useEffect(() => {
+    async function fetchNote() {
+      const fetchedNote = await getNoteByCourse(courseId);
+      setNotes(fetchNote?.note_text || '');
+    }
+    fetchNote(); //call it right here to fetch on load
+  }, [courseId]); //if this change, trigger useEffect()
+
+  //handle saved notes from the users:
+  const handleSaveNotes = async () => {
+    await addNote({
+      course_id: courseId,
+      note_text: notes,
+    }) //this sends the notes object to supabase
+    setIsEditingNotes(false); //change state
+  }
   //navigate back to HomePage:
   const handleBackToHomeClick = () => {
-    navigate('/');
+    navigate('/home');
     console.log(`Navigating from ${course.id} back to HomePage`);
 };
 
@@ -88,7 +108,7 @@ function IndividualCoursePage() {
                 }}
               />
               <button
-                onClick={() => setIsEditingNotes(false)}
+                onClick={handleSaveNotes} //hook the handle function to the component
                 style={{
                   marginTop: '10px',
                   padding: '8px 16px',

@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
 function Header({title, description}) {
 
-    //handle "login" button click:
-    const handleLoginClick = () => {
-        console.log("Login clicked");
+    //handle "logout" button click:
+    const handleLogoutClick = () => {
+        console.log("Logout clicked");
     };
 
     return (
@@ -42,7 +43,7 @@ function Header({title, description}) {
 
       {/* Right side - Login Button */}
       <button
-        onClick={handleLoginClick}
+        onClick={handleLogoutClick}
         style={{
           backgroundColor: '#1976d2',
           color: 'white',
@@ -54,7 +55,7 @@ function Header({title, description}) {
           cursor: 'pointer'
         }}
       >
-        Login
+        Logout
       </button>
     </div>
   );
